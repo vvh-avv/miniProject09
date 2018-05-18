@@ -4,48 +4,58 @@
 <head>
 <title>로그인 화면</title>
 
-<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
-<!--
-	//로그인 엔터키 처리
-	document.onkeypress = enter;	
-	function enter(e){
-		if(e.which==13){
-			fncLogin()
-		}
-	}
-
-	function fncLogin() {
-		var id=document.loginForm.userId.value;
-		var pw=document.loginForm.password.value;
-		if(id == null || id.length <1) {
+	function fncLogin(){
+		var id = $("input:text").val();
+		var pw = $("input:password").val();
+			
+		if(id==null || id.length<1){
 			alert('ID 를 입력하지 않으셨습니다.');
-			document.loginForm.userId.focus();
+			$("input:text").focus();
 			return;
 		}
-		
-		if(pw == null || pw.length <1) {
+			
+		if(pw==null || pw.length<1){
 			alert('패스워드를 입력하지 않으셨습니다.');
-			document.loginForm.password.focus();
+			$("input:password").focus();
 			return;
 		}
-	    document.loginForm.submit();
+			
+		$("form").attr("method","POST").attr("action","/user/login").attr("target","_parent").submit();
 	}
 	
-	//Call Back Method 이용 onload 시 Event 처리
-	window.onload = function(){
-		document.getElementById("userId").focus();
-	}
--->
+	$(function(){
+		$("#userId").focus();
+		
+		//로그인 엔터키 처리
+		$("#userId, #password").keypress(function(event){
+			if(event.which==13){
+				fncLogin();
+			}
+		});
+
+		$("img[src='/images/btn_login.gif']").on("click", function(){
+			fncLogin();
+		});
+	});
+	
+	$(function(){
+		$("img[src='/images/btn_add.gif']").on("click", function(){
+			self.location="/user/addUser";
+			//self.location="addUserView.jsp";
+		});
+	});
 </script>
 
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
 
-	<form name="loginForm" method="post" action="/user/login" target="_parent">
+	<form name="loginForm">
 
 		<div align="center">
 
@@ -78,13 +88,13 @@
 													<tr>
 														<td width="30" height="30">&nbsp;</td>
 														<td width="100" height="30"><img src="/images/text_id.gif" width="100" height="30" /></td>
-														<td height="30"><input type="text" name="userId" class="ct_input_g" style="width: 180px; height: 19px" maxLength='50' /></td>
+														<td height="30"><input type="text" name="userId" id="userId" class="ct_input_g" style="width: 180px; height: 19px" maxLength='50' /></td>
 														<td width="20" height="30">&nbsp;</td>
 													</tr>
 													<tr>
 														<td width="30" height="30">&nbsp;</td>
 														<td width="100" height="30"><img src="/images/text_pas.gif" width="100" height="30" /></td>
-														<td height="30"><input type="password" name="password" class="ct_input_g" style="width: 180px; height: 19px" maxLength="50" /></td>
+														<td height="30"><input type="password" name="password" id="password" class="ct_input_g" style="width: 180px; height: 19px" maxLength="50" /></td>
 														<td width="20" height="30">&nbsp;</td>
 													</tr>
 													<tr>
@@ -94,15 +104,11 @@
 															<table width="136" height="20" border="0" cellpadding="0" cellspacing="0">
 																<tr>
 																	<td width="56">
-																		<a href="javascript:fncLogin();">
-																			<img src="/images/btn_login.gif" width="56" height="20" border="0" />
-																		</a>
+																		<img src="/images/btn_login.gif" width="56" height="20" border="0" />
 																	</td>
 																	<td width="10">&nbsp;</td>
 																	<td width="70">
-																		<a href="addUserView.jsp;">
-																			<img src="/images/btn_add.gif" width="70" height="20" border="0">
-																		</a>
+																		<img src="/images/btn_add.gif" width="70" height="20" border="0">
 																	</td>
 																</tr>
 															</table>

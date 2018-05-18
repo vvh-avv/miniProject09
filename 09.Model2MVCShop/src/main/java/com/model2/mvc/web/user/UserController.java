@@ -120,7 +120,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="logout", method=RequestMethod.GET)
-	public String logout(HttpSession session ) throws Exception{
+	public String logout( HttpSession session ) throws Exception{
 		System.out.println("/user/logout : GET");
 		
 		session.invalidate();
@@ -174,7 +174,7 @@ public class UserController {
 			reason = reason.split(",")[0];
 		}
 		userService.quitUser(userId, reason); //Å»ÅðDB¿¡ insert
-		userService.deleteUser(userId); //È¸¿øDB¿¡ delete
+		//userService.deleteUser(userId); //È¸¿øDB¿¡ delete
 		
 		return "redirect:/user/logout";
 	}

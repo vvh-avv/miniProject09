@@ -8,12 +8,23 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
-<!--
-function fncQuitUser() {
-	popWin = window.open("/user/quitUserView.jsp","popWin", "left=300,top=200,width=300,height=200,marginwidth=0,marginheight=0,scrollbars=no,scrolling=no,menubar=no,resizable=no");
-}
--->
+	$(function(){
+		$("td.ct_btn01:contains('È®ÀÎ')").on("click", function(){
+			//parent.location = "../index.jsp";
+			history.go(-1);
+		});
+
+		$("td.ct_btn01:contains('¼öÁ¤')").on("click", function(){
+			self.location = "/user/updateUser?userId=${user.userId}"
+		});
+		
+		$("td.ct_btn01:contains('È¸¿øÅ»Åð')").on("click", function(){
+			popWin = window.open("/user/quitUserView.jsp","popWin", "left=300,top=200,width=300,height=200,marginwidth=0,marginheight=0,scrollbars=no,scrolling=no,menubar=no,resizable=no");
+		});
+	});
+
 </script>
 
 </head>
@@ -115,7 +126,8 @@ function fncQuitUser() {
 					<tr>
 						<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23" /></td>
 						<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-							<a href="javascript:fncQuitUser();">È¸¿øÅ»Åð</a>
+							<!-- <a href="javascript:fncQuitUser();">È¸¿øÅ»Åð</a> -->
+							È¸¿øÅ»Åð
 						</td>
 						<td width="14" height="23"><img src="/images/ct_btnbg03.gif" width="14" height="23" /></td>
 						<td width="30"></td>
@@ -130,20 +142,16 @@ function fncQuitUser() {
 					<tr>
 						<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23" /></td>
 						<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-							<a href="/user/updateUser?userId=${user.userId}">¼öÁ¤</a>
+							¼öÁ¤
 						</td>
 						<td width="14" height="23"><img src="/images/ct_btnbg03.gif" width="14" height="23" /></td>
 						<td width="30"></td>
 
 						<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23" /></td>
 						<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-							<!--a href="javascript:history.go(-1);"-->
-							<a href="../index.jsp" target="_parent">È®ÀÎ</a>
+							È®ÀÎ
 						</td>
 						<td width="14" height="23"><img src="/images/ct_btnbg03.gif" width="14" height="23" /></td>
-
-
-
 					</tr>
 				</table>
 			</td>

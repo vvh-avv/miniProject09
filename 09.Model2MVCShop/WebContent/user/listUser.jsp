@@ -8,14 +8,34 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
-<!--
-	// 검색 / page 두가지 경우 모두 Form 전송을 위해 JavaScrpt 이용  
+  
 	function fncGetList(currentPage) {
-		document.getElementById("currentPage").value = currentPage;
-	   	document.detailForm.submit();		
+		$("#currentPage").val(currentPage);
+		$("form").attr("method","POST").attr("action","/user/listUser").submit();
 	}
--->
+	
+	$(function(){
+		$("td.ct_btn01:contains('검색')").on("click", function(){
+			fncGetUserList(1);
+		});
+		
+		$("input[name='orderList']").on("click", function(){
+			self.location="/purchase/listPurchase?userId=${user.userId}";	
+		})
+		
+		$(".ct_list_pop td:nth-child(3)").on("click", function(){
+			self.location = "/user/getUser?userId="+$(this).text().trim();
+		});
+
+		$(".ct_list_pop td:nth-child(3)").css("color", "red");
+		$("h7").css("color", "red");
+
+		$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
+		console.log ( $(".ct_list_pop:nth-child(4)" ).html() );
+	});
+
 </script>
 
 </head>
@@ -24,29 +44,23 @@
 
 	<div style="width: 98%; margin-left: 10px;">
 
-		<form name="detailForm" action="/user/listUser" method="post">
+		<form name="detailForm">
 
-			<table width="100%" height="37" border="0" cellpadding="0"
-				cellspacing="0">
+			<table width="100%" height="37" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td width="15" height="37"><img src="/images/ct_ttl_img01.gif"
-						width="15" height="37" /></td>
-					<td background="/images/ct_ttl_img02.gif" width="100%"
-						style="padding-left: 10px;">
+					<td width="15" height="37"><img src="/images/ct_ttl_img01.gif" width="15" height="37" /></td>
+					<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left: 10px;">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="93%" class="ct_ttl01">회원 목록조회</td>
 							</tr>
 						</table>
-
 					</td>
-					<td width="12" height="37"><img src="/images/ct_ttl_img03.gif"
-						width="12" height="37"></td>
+					<td width="12" height="37"><img src="/images/ct_ttl_img03.gif" width="12" height="37"></td>
 				</tr>
 			</table>
 
-			<table width="100%" border="0" cellspacing="0" cellpadding="0"
-				style="margin-top: 10px;">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
 				<tr>
 					<td align="right">
 						<select name="searchCondition" class="ct_input_g" style="width: 80px">
@@ -62,7 +76,7 @@
 							<tr>
 								<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23" /></td>
 								<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-									<a href="javascript:fncGetList('1');">검색</a>
+									검색
 								</td>
 								<td width="14" height="23"><img src="/images/ct_btnbg03.gif" width="14" height="23" /></td>
 							</tr>
@@ -71,8 +85,7 @@
 				</tr>
 			</table>
 
-			<table width="100%" border="0" cellspacing="0" cellpadding="0"
-				style="margin-top: 10px;">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
 				<tr>
 					<td colspan="11">전체 ${resultPage.totalCount} 건수, 현재 ${resultPage.currentPage} 페이지</td>
 				</tr>
@@ -88,7 +101,8 @@
 								<a onclick="location.href='/user/listUser?sort=asc'" style="cursor: pointer"> ↑ </a>
 							</c:otherwise>
 						</c:choose>
-
+						 <br>
+						<h7>(ID click : 상세정보)</h7>
 					</td>
 					<td class="ct_line02"></td>
 					<td class="ct_list_b" width="150">회원명</td>
@@ -108,16 +122,16 @@
 					<tr class="ct_list_pop">
 						<td align="center">${ i }</td>
 						<td></td>
-						<td align="left"><a href="/user/getUser?userId=${user.userId}">${user.userId}</a>
+						<td align="left">${user.userId}
 						</td>
 						<td></td>
 						<td align="left">${user.userName}</td>
 						<td></td>
 						<td align="left">${user.email}</td>
 						<td></td>
-						<td align="left"><input type="button"
-							onclick="location.	href='/purchase/listPurchase?userId=${user.userId}'"
-							value="주문내역"></td>
+						<td align="left">
+							<input type="button" name="orderList" value="주문내역보기">
+						</td>
 					</tr>
 					<tr>
 						<td colspan="11" bgcolor="D6D7D6" height="1"></td>
