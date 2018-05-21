@@ -18,13 +18,13 @@ public class Product {
 	}
 	
 	public String getProTranCode() {
-		return proTranCode.trim();
+		return proTranCode;
 	}
 	public void setProTranCode(String proTranCode) {
 		this.proTranCode = proTranCode;
 	}
 	public String getFileName() {
-		return fileName.trim();
+		return fileName;
 	}
 	public void setFileName(String fileName) {
 		this.fileName = fileName;

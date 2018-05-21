@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
-import javax.swing.plaf.synth.SynthSeparatorUI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -65,7 +64,7 @@ public class UserRestController {
 		return userService.getUser(user.getUserId());
 	}
 	
-	@RequestMapping(value="json/checkDuplication/{userId}", method=RequestMethod.POST)
+	@RequestMapping(value="json/checkDuplication", method=RequestMethod.POST)
 	public void checkDuplication( @PathVariable String userId ) throws Exception{
 		System.out.println("/user/json/checkDuplication : POST");
 		
@@ -97,7 +96,7 @@ public class UserRestController {
 		}
 
 		userService.quitUser(userId, reason); //Å»ÅðDB¿¡ insert
-		userService.deleteUser(userId); //È¸¿øDB¿¡ delete
+		//userService.deleteUser(userId); //È¸¿øDB¿¡ delete
 		
 		System.out.println(userId+"È¸¿ø "+reason+"ÀÌÀ¯·Î Å»ÅðÇÏ¼Ì½À´Ï´Ù.");
 	}

@@ -62,13 +62,20 @@ public class ProductController {
 	public String addProduct( @ModelAttribute("product") Product product, MultipartHttpServletRequest request, //HttpServletRequest request,
 										@RequestParam("file") MultipartFile[] file ) throws Exception {
 		System.out.println("/product/addProduct : POST");
+		
 		//String uploadPath = request.getSession().getServletContext().getRealPath("/");
 		String uploadPath = request.getRealPath("/images/uploadFiles");
-
+		
 		String fileOriginName = "";
 		String fileMultiName = "";
 		for(int i=0; i<file.length; i++) {
 			fileOriginName = file[i].getOriginalFilename();
+			
+			//파일이 존재하지 않으면
+			if(fileOriginName=="") {
+				break;
+			}
+			
 			System.out.println("기존 파일명 : "+fileOriginName);
 			SimpleDateFormat formatter = new SimpleDateFormat("YYYYMMDD_HHMMSS_"+i);
 			Calendar now = Calendar.getInstance();
@@ -151,7 +158,7 @@ public class ProductController {
 		String fileOriginName = "";
 		String fileMultiName = "";
 		
-		//기존 파일 삭제
+/*		//기존 파일 삭제
 		if(product.getFileName().contains(",")) {
 			for( String fileName : product.getFileName().split(",") ) {
 				new File(uploadPath+fileName).delete();
@@ -160,10 +167,16 @@ public class ProductController {
 		}else {
 			new File(uploadPath+product.getFileName()).delete();
 			System.out.println(product.getFileName()+" 삭제 완료");
-		}
+		}*/
 		
 		for(int i=0; i<file.length; i++) {
 			fileOriginName = file[i].getOriginalFilename();
+			
+			//파일이 존재하지 않으면
+			if(fileOriginName=="") {
+				break;
+			}			
+			
 			System.out.println("기존 파일명 : "+fileOriginName);
 			SimpleDateFormat formatter = new SimpleDateFormat("YYYYMMDD_HHMMSS_"+i);
 			Calendar now = Calendar.getInstance();
@@ -185,7 +198,7 @@ public class ProductController {
 		
 		productService.updateProduct(product);
 		
-		return "forward:/product/getProduct?prodNo="+product.getProdNo();
+		return "forward:/product/getProduct?prodNo="+product.getProdNo()+"&menu=manage";
 	}
 
 	@RequestMapping(value="listProduct")

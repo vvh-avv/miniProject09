@@ -29,6 +29,14 @@
 			self.location = "/user/getUser?userId="+$(this).text().trim();
 		});
 
+		$("#under").on("click", function(){
+			self.location = "/user/listUser?sort=desc";
+		})
+		
+		$("#high").on("click", function(){
+			self.location = "/user/listUser?sort=asc";
+		})
+		
 		$(".ct_list_pop td:nth-child(3)").css("color", "red");
 		$("h7").css("color", "red");
 
@@ -95,10 +103,10 @@
 					<td class="ct_list_b" width="150">È¸¿øID
 						<c:choose>
 							<c:when test="${requestScope.sort=='asc'}">
-								<a onclick="location.href='/user/listUser?sort=desc'" style="cursor: pointer"> ¡é </a>
+								<span id="under">¡é</span>
 							</c:when>
 							<c:otherwise>
-								<a onclick="location.href='/user/listUser?sort=asc'" style="cursor: pointer"> ¡è </a>
+								<span id="high">¡è</span>
 							</c:otherwise>
 						</c:choose>
 						 <br>

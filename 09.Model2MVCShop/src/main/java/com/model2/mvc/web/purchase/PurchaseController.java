@@ -46,7 +46,7 @@ public class PurchaseController {
 
 	
 	@RequestMapping(value="/purchase/addPurchase", method=RequestMethod.GET)
-	public ModelAndView addPurchase(@RequestParam("prod_no") int prodNo ) throws Exception {
+	public ModelAndView addPurchase( @RequestParam("prod_no") int prodNo ) throws Exception {
 		System.out.println("/purchase/addPurchase : GET");
 		
 		Product product = productService.getProduct(prodNo);

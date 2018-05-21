@@ -7,12 +7,26 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
-<!--
-function fncAlert(){
-	alert("로그인 후 구매해주시길 바랍니다.");
-}
--->
+	$(function(){
+		$("#guest").on("click", function(){
+			alert("로그인 후 구매해주시길 바랍니다.");
+		})
+		
+		$("#user").on("click", function(){
+			self.location="/purchase/addPurchase?prod_no=${product.prodNo}";
+		})
+		
+		$("#before").on("click", function(){
+			history.go(-1);
+		})
+		
+		$("#submit").on("click", function(){
+			$("form").attr("method", "POST").attr("action", "/product/listProduct?menu=${param.menu=='manage'?'manage':'search'}").submit();
+		})
+	})
+	
 </script>
 
 <title>상품상세조회</title>
@@ -20,7 +34,7 @@ function fncAlert(){
 
 <body bgcolor="#ffffff" text="#000000">
 
-	<form name="detailForm" method="post">
+	<form name="detailForm">
 
 		<table width="100%" height="37" border="0" cellpadding="0" cellspacing="0">
 			<tr>
@@ -139,10 +153,10 @@ function fncAlert(){
 								<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23" /></td>
 								<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
 									<c:if test="${empty sessionScope.user}">
-										<a href="javascript:fncAlert();">구매</a>
+										<span id="guest">구매</span>
 									</c:if>
 									<c:if test="${!empty sessionScope.user}">
-										<a href="/purchase/addPurchase?prod_no=${product.prodNo}">구매</a>
+										<span id="user">구매</span>
 									</c:if>
 								</td>
 								<td width="14" height="23"><img src="/images/ct_btnbg03.gif" width="14" height="23"></td>
@@ -152,10 +166,10 @@ function fncAlert(){
 							<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23" /></td>
 							<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
 								<c:if test="${empty product}">
-									<a href="javascript:history.go(-1)">이전</a>
+									<span id="before">이전</span>
 								</c:if>
 								<c:if test="${!empty product}">
-									<a href="/product/listProduct?menu=manage">확인</a>
+									<span id="submit">확인</span>
 								</c:if>
 							</td> 
 							<td width="14" height="23"><img src="/images/ct_btnbg03.gif" width="14" height="23" /></td>

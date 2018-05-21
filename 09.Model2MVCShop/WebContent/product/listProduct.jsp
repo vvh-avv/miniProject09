@@ -8,49 +8,71 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
-<!--
-
-// page
-function fncGetList(currentPage) {
-	document.getElementById("currentPage").value = currentPage;
-   	document.detailForm.submit();
-}
-
-// 전체체크
-function allChk(obj){
-	var chkObj = document.getElementsByName("prodList");
-	var rowCnt = chkObj.length-1;
-	var check = obj.checked;
-	if(check){
-		for(var i=0; i<=rowCnt; i++){
-			if(chkObj[i].type=="checkbox"){
-				chkObj[i].checked=true;
+	function fncGetList(currentPage) {
+		$("#currentPage").val(currentPage);
+		$("form").attr("method","POST").attr("action","/product/listProduct?menu=${param.menu=='manage'?'manage':'search'}").submit();
+	}
+	
+	$(function(){
+		$("td.ct_btn01:contains('검색')").on("click", function(){
+			fncGetUserList(1);
+		});
+		
+		$("#prodName_under").on("click", function(){
+			self.location = "/product/listProduct?sort=prod_name+desc&menu=${param.menu}";
+		})
+		
+		$("#prodName_high").on("click", function(){
+			self.location = "/product/listProduct?sort=prod_name+asc&menu=${param.menu}";
+		})
+		
+		$("#price_under").on("click", function(){
+			self.location = "/product/listProduct?sort=price+desc&menu=${param.menu}";
+		})
+		
+		$("#price_high").on("click", function(){
+			self.location = "/product/listProduct?sort=price+asc&menu=${param.menu}";
+		})
+				
+		//$(".ct_list_pop td:nth-child(4n)" ).css("background-color" , "whitesmoke");
+	})
+	
+	// 전체체크
+	function allChk(obj){ 
+		var chkObj = $("input[name='prodList']");
+		var rowCnt = chkObj.length-1;
+		var check = obj.checked;
+		if(check){
+			for(var i=0; i<=rowCnt; i++){
+				if(chkObj[i].type=="checkbox"){
+					chkObj[i].checked=true;
+				}
 			}
-		}
-	}else{
-		for(var i=0;i<=rowCnt;i++){
-			if(chkObj[i].type=="checkbox"){
-				chkObj[i].checked=false;
+		}else{
+			for(var i=0;i<=rowCnt;i++){
+				if(chkObj[i].type=="checkbox"){
+					chkObj[i].checked=false;
+				}
 			}
 		}
 	}
-}
-
-// 배송 일괄처리
-function stateSubmit(){
-	//상품목록 체크
-	var chkProd = document.getElementsByName("prodList");
-	var prodNoAndTranCode = "";
-	for(var i=0;i<chkProd.length;i++){
-		if(chkProd[i].checked==true){
-			if(prodNoAndTranCode=="") {
-				prodNoAndTranCode += chkProd[i].value;
-			}else {
-				prodNoAndTranCode += ","+chkProd[i].value;
+	
+	// 배송 일괄처리
+	function stateSubmit(){
+		//상품목록 체크
+		var chkProd = $("input[name='prodList']");
+		var prodNoAndTranCode = "";
+		for(var i=0;i<chkProd.length;i++){
+			if(chkProd[i].checked==true){
+				if(prodNoAndTranCode=="") {
+					prodNoAndTranCode += chkProd[i].value;
+				}else {
+					prodNoAndTranCode += ","+chkProd[i].value;
+				}
 			}
 		}
-	}
 	
 	//여러제품 선택했을 때 각 제품의 tranCode값을 tran(String)변수에 담는다
 	var prodList = "";
@@ -71,8 +93,9 @@ function stateSubmit(){
 	}
 	
 	//배송상태 체크
-	var stateIndex = document.detailForm.condition.options.selectedIndex;
-	var state = document.detailForm.condition.options.value;
+	var stateIndex = $(".condition:selected").val();
+	var state = $(".condition").val();
+	
 	if(prodList==""){
 		alert("상품을 선택 후 처리해주세요.");
 	}else{
@@ -81,21 +104,18 @@ function stateSubmit(){
 			switch(stateIndex){
 				case 0 : //배송중처리
 					if(tranCode.indexOf("1")==-1) { alert("배송중 처리가 불가합니다."); break; } //유효성 체크
-					document.detailForm.action='/purchase/updateTranCodeByProd?prodNo='+prodNo+'&tranCode=2';
-					document.detailForm.submit();
+					$("form").attr("method","POST").attr("action","/purchase/updateTranCodeByProd?prodNo='"+prodNo+"'&tranCode=2'").submit();
 					alert("처리되었습니다.");
 					break;
-				case 1 : //반품처리
+				case 1 : //반품
 					if(tranCode!=-2) { alert("반품처리가 불가합니다."); break; } //유효성 체크
-					document.detailForm.action='/purchase/updateTranCodeByProd?prodNo='+prodNo+'&tranCode=-3';
-					document.detailForm.submit();
+					$("form").attr("method","POST").attr("action","/purchase/updateTranCodeByProd?prodNo='"+prodNo+"'&tranCode=-3'").submit();
 					alert("처리되었습니다.");
 					break;
 				case 2 : //반품거절
 					if(tranCode!=-2) { alert("반품거절처리가 불가합니다."); break; } //유효성 체크
-					document.detailForm.action='/purchase/updateTranCodeByProd?prodNo='+prodNo+'&tranCode=${sessionScope.tranCodeTemp}';
+					$("form").attr("method","POST").attr("action","/purchase/updateTranCodeByProd?prodNo='"+prodNo+"'&tranCode=${sessionScope.tranCodeTemp}'").submit();
 					sessionScope.removeAttribute("tranCodeTemp");
-					document.detailForm.submit();
 					alert("처리되었습니다.");
 					break;
 				}
@@ -104,7 +124,6 @@ function stateSubmit(){
 	
 }
 
--->
 </script>
 </head>
 
@@ -112,7 +131,7 @@ function stateSubmit(){
 
 	<div style="width: 98%; margin-left: 10px;">
 
-		<form name="detailForm" action="/product/listProduct?menu=${param.menu=='manage'?'manage':'search'}" method="post">
+		<form name="detailForm">
 
 			<table width="100%" height="37" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -174,7 +193,8 @@ function stateSubmit(){
 							<tr>
 								<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23"></td>
 								<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-									<a href="javascript:fncGetList('1');">검색</a></td>
+									검색
+								</td>
 								<td width="14" height="23"><img src="/images/ct_btnbg03.gif" width="14" height="23"></td>
 							</tr>
 						</table>
@@ -197,7 +217,7 @@ function stateSubmit(){
 						<td colspan="13" align="right"> 선택한 상품을
 							<select class="condition" name="condition">
 								<option value="배송중">배송중</option>
-								<option value="반품처리">반품처리</option>
+								<option value="반품">반품</option>
 								<option value="반품거절">반품거절</option>
 							</select> &nbsp;
 							<input type="button" value="처리" onclick="stateSubmit();">
@@ -227,19 +247,19 @@ function stateSubmit(){
 
 					<td class="ct_list_b" width="150">상품명
 						<c:if test="${requestScope.sort=='prod_no asc' || sort=='prod_name asc' || sort=='price asc' || sort=='price desc'}">
-							<a onclick="location.href='/product/listProduct?sort=prod_name+desc&menu=${param.menu}';" style="cursor: pointer"> ↓ </a>
+							<span id="prodName_under">↓</span>
 						</c:if>
 						<c:if test="${requestScope.sort=='prod_name desc'}">
-							<a onclick="location.href='/product/listProduct?sort=prod_name+asc&menu=${param.menu}';" style="cursor: pointer"> ↑ </a>
+							<span id="prodName_high">↑</span>
 						</c:if>
 					</td>
 					<td class="ct_line02"></td>
 					<td class="ct_list_b" width="150">가격
 						<c:if test="${requestScope.sort=='prod_no asc' || sort=='price asc' || sort=='prod_name asc' || sort=='prod_name desc'}">
-							<a onclick="location.href='/product/listProduct?sort=price+desc&menu=${param.menu}';" style="cursor: pointer"> ↓ </a>
+							<span id="price_under">↓</span>
 						</c:if>
 						<c:if test="${requestScope.sort=='price desc'}">
-							<a onclick="location.href='/product/listProduct?sort=price+asc&menu=${param.menu}';" style="cursor: pointer"> ↑ </a>
+							<span id="price_high">↑</span>
 						</c:if>
 
 					</td>
@@ -297,19 +317,19 @@ function stateSubmit(){
 									<c:when test="${product.proTranCode=='0' || product.proTranCode=='-1'}">
 										판매중
 									</c:when>
-									<c:when test="${product.proTranCode=='1'}">
+									<c:when test="${product.proTranCode.trim()=='1'}">
 										구매완료
 									</c:when>
-									<c:when test="${product.proTranCode=='2'}">
+									<c:when test="${product.proTranCode.trim()=='2'}">
 										배송중
 									</c:when>
-									<c:when test="${product.proTranCode=='3'}">
+									<c:when test="${product.proTranCode.trim()=='3'}">
 										배송완료
 									</c:when>
-									<c:when test="${product.proTranCode=='-2'}">
+									<c:when test="${product.proTranCode.trim()=='-2'}">
 										반품신청					
 									</c:when>
-									<c:when test="${product.proTranCode=='-3'}">
+									<c:when test="${product.proTranCode.trim()=='-3'}">
 										반품완료
 									</c:when>
 								</c:choose>
@@ -317,7 +337,7 @@ function stateSubmit(){
 							<!-- 유저로 접속했을 경우 -->
 							<c:if test="${empty user || user.role=='user'}">
 								<c:choose>
-									<c:when test="${product.proTranCode=='0' || product.proTranCode=='-1'}">
+									<c:when test="${product.proTranCode.trim()=='0' || product.proTranCode.trim()=='-1'}">
 										판매중
 									</c:when>
 									<c:when test="${product.proTranCode!='0'}">
