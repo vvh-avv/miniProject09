@@ -5,6 +5,7 @@
 <html>
 <head>
 <title>구매완료화면</title>
+
 </head>
 
 <body>
@@ -62,8 +63,7 @@
 		</table>
 	</form>
 
-	<br>
-	<input type="button" value="구매상세조회" onclick="/purchase/GetPurchase?tranNo=${purchase.tranNo}">
+<%-- <input type="button" value="구매상세조회" onclick="/purchase/GetPurchase?tranNo=${purchase.tranNo}"> --%>
 
 
 </body>

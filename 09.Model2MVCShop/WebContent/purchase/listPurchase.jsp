@@ -9,14 +9,51 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
-<!--
-	// 검색 / page 두가지 경우 모두 Form 전송을 위해 JavaScrpt 이용  
+
 	function fncGetList(currentPage) {
-		document.getElementById("currentPage").value = currentPage;
-	   	document.detailForm.submit();
+		$("#currentPage").val(currentPage);
+		$("form").attr("method","POST").attr("action","/purchase/listPurchase").submit();
 	}
--->
+	
+	$(function(){
+		$("#under").on("click", function(){
+			self.location = "/purchase/listPurchase?sort=desc";
+		})
+		
+		$("#high").on("click", function(){
+			self.location = "/purchase/listPurchase?sort=asc";
+		})
+		
+		$(".ct_list_pop td:nth-child(5)").on("click", function(){
+			self.location = "/purchase/getPurchase?tranNo="+$(this).text().trim();
+		})
+		
+		$(".ct_list_pop td:nth-child(7)").on("click", function(){
+			self.location = "/product/updateProduct?prodNo="+$(this).text().trim()+"&menu=search";
+		})
+		
+		$("#tc_cancle").on("click", function(){ //주문취소
+			$("form").attr("method", "POST").attr("action", "/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=-1").submit();
+		})
+		
+		$("#tc_arrive").on("click", function(){ //물건도착
+			$("form").attr("method", "POST").attr("action", "/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=3").submit();
+		})
+		
+		$("#tc_return").on("click", function(){ //상품반품
+			$("form").attr("method", "POST").attr("action", "/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=-2").submit();
+		})
+		
+		$("#tc_return>").css("color", "red");
+		$("#tc_cancle>").css("color", "red");
+		$("#tc_arrive>").css("color", "blue");
+		
+		$(".ct_list_pop:nth-child(4n)" ).css("background-color" , "whitesmoke");
+		
+	})
+
 </script>
 </head>
 
@@ -24,7 +61,7 @@
 
 	<div style="width: 98%; margin-left: 10px;">
 
-		<form name="detailForm" action="/purchase/listPurchase" method="post">
+		<form name="detailForm">
 
 			<table width="100%" height="37" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -85,15 +122,17 @@
 				<tr>
 					<td class="ct_list_b" width="50">No</td>
 					<td class="ct_line02"></td>
-					<td class="ct_list_b" width="100">주문일자 <!-- 주문일자 기준 소팅기능 추가 -->
+					<td class="ct_list_b" width="100">주문일자
+						<!-- 주문일자 기준 소팅기능 추가 -->
 						<c:choose>
 							<c:when test="${requestScope.sort=='asc'}">
-								<a onclick="location.href='/purchase/listPurchase?sort=desc';" style="cursor: pointer"> ↓ </a>
+								<span id="under">↓</span>
 							</c:when>
 							<c:otherwise>
-								<a onclick="location.href='/purchase/listPurchase?sort=asc';" style="cursor: pointer"> ↑ </a>
+								<span id="high">↑</span>
 							</c:otherwise>
-						</c:choose> <!-- 주문일자 기준 소팅기능 끝 -->
+						</c:choose>
+						<!-- 주문일자 기준 소팅기능 끝 -->
 
 					</td>
 					<td class="ct_line02"></td>
@@ -126,23 +165,14 @@
 						<!-- 0413 주문일자, 주문번호, 구매정보 노출시키기 -->
 						<td align="center">${purchase.orderDate}</td>
 						<td></td>
-
-						<td align="center">
-							<a href="/purchase/getPurchase?tranNo=${purchase.tranNo}">${purchase.tranNo}</a>
-						</td>
+						<td align="center">${purchase.tranNo}</td>
 						<td></td>
-
-						<td align="center">
-							<a href="/product/updateProduct?prodNo=${purchase.purchaseProd.prodNo}&menu=search">${purchase.purchaseProd.prodName}</a>
-						</td>
+						<td align="center">${purchase.purchaseProd.prodName}</td>
 						<td></td>
-
 						<td align="left">${purchase.receiverName}</td>
 						<td></td>
-
 						<td align="left">${purchase.divyAddr}</td>
 						<td></td>
-
 						<td align="left">${purchase.receiverPhone}</td>
 						<td></td>
 						<!-- 추가완료 -->
@@ -153,24 +183,31 @@
 							<c:if test="${sessionScope.tranCodeTemp<0 || empty sessionScope.tranCodeTemp}">
 								<c:set var="tranCodeTemp" value="${purchase.tranCode}" scope="session" />
 							</c:if>
+							
 							<c:choose>
 								<c:when test="${purchase.tranCode=='1'}">
 									현재 구매완료 상태입니다.
 									<!-- 0418 취소 기능 추가 -->
-									<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=-1"><font color='red'>주문취소</font></a>
+									<span id="tc_cancle">
+										<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=-1">주문취소</a>
+									</span>
 								</c:when>
 
 								<c:when test="${purchase.tranCode=='2'}">
 									현재 배송중 상태입니다.
-									<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=3"><font color='blue'>물건도착</font></a>
-									<!-- 0418 취소 기능 추가 -->
-									<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=-2"><font color='red'>상품반품</font></a>
+									<span id="tc_arrive">
+										<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=3">배송중</a>
+									</span>
+									<span id="tc_return">
+										<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=-2">상품반품</a>
+									</span>
 								</c:when>
 
 								<c:when test="${purchase.tranCode=='3'}">
 									현재 배송완료 상태입니다.
-									<!-- 0418 취소 기능 추가 -->
-									<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=-2"><font color='red'>상품반품</font></a>
+									<span id="tc_return">
+										<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=-2">상품반품</a>
+									</span>
 								</c:when>
 
 								<c:when test="${purchase.tranCode=='-1'}">

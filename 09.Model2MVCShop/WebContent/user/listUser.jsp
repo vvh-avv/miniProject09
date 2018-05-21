@@ -21,9 +21,9 @@
 			fncGetUserList(1);
 		});
 		
-		$("input[name='orderList']").on("click", function(){
-			self.location="/purchase/listPurchase?userId=${user.userId}";	
-		})
+		//$("input[name='orderList']").on("click", function(){
+		//	self.location="/purchase/listPurchase?userId=${userr.userId}";	
+		//})
 		
 		$(".ct_list_pop td:nth-child(3)").on("click", function(){
 			self.location = "/user/getUser?userId="+$(this).text().trim();
@@ -130,15 +130,14 @@
 					<tr class="ct_list_pop">
 						<td align="center">${ i }</td>
 						<td></td>
-						<td align="left">${user.userId}
-						</td>
+						<td align="left">${user.userId}</td>
 						<td></td>
 						<td align="left">${user.userName}</td>
 						<td></td>
 						<td align="left">${user.email}</td>
 						<td></td>
 						<td align="left">
-							<input type="button" name="orderList" value="주문내역보기">
+							<input type="button" name="orderList" value="주문내역보기" onclick="location.href='/purchase/listPurchase?userId=${user.userId}'">
 						</td>
 					</tr>
 					<tr>

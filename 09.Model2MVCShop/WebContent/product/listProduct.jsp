@@ -288,7 +288,7 @@
 						</td>
 						<td></td>
 
-						<!-- 어드민으로 접속했을 경우에만 주문번호를 노출시키겠다  -->
+						<!-- 어드민으로 접속했을 경우에만 상품번호를 노출시키겠다  -->
 						<c:if test="${!empty user && user.role=='admin'}">
 							<td align="center">${product.prodNo}</td>
 							<td></td>

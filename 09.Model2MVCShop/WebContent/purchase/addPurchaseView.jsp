@@ -7,15 +7,21 @@
 
 <title>惑前备概</title>
 
-<script type="text/javascript" src="../javascript/calendar.js">
-</script>
+<script type="text/javascript" src="../javascript/calendar.js"></script>
 
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
-<!--
-function fncAddPurchase() {
-	document.addPurchase.submit();
-}
--->
+
+	$(function(){
+		$("td.ct_btn01:contains('备概')").on("click", function(){
+			$("form").attr("method", "POST").attr("action", "/purchase/addPurchase?prodNo=${product.prodNo}").submit();
+		})
+		
+		$("td.ct_btn01:contains('秒家')").on("click", function(){
+			history.go(-1)
+		})
+	})
+
 </script>
 </head>
 
@@ -187,13 +193,13 @@ function fncAddPurchase() {
 						<tr>
 							<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23" /></td>
 							<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-								<a href="javascript:fncAddPurchase();">备概</a>
+								备概
 							</td>
 							<td width="14" height="23"><img src="/images/ct_btnbg03.gif" width="14" height="23" /></td>
 							<td width="30"></td>
 							<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23" /></td>
 							<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-								<a href="javascript:history.go(-1)">秒家</a>
+								秒家
 							</td>
 							<td width="14" height="23"><img src="/images/ct_btnbg03.gif" width="14" height="23" /></td>
 						</tr>
