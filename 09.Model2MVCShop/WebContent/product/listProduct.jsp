@@ -20,6 +20,10 @@
 			fncGetUserList(1);
 		});
 		
+		$("input[name='delSubmit']").on("click", function(){
+			 stateSubmit();
+		})
+		
 		$("#prodName_under").on("click", function(){
 			self.location = "/product/listProduct?sort=prod_name+desc&menu=${param.menu}";
 		})
@@ -205,7 +209,7 @@
 
 			<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
 				<tr>
-					<td colspan="13">전체 ${resultPage.totalCount} 건수, 현재 ${resultPage.currentPage} 페이지</td>
+					<td colspan="15">전체 ${resultPage.totalCount} 건수, 현재 ${resultPage.currentPage} 페이지</td>
 				</tr>
 
 				<!-- 0420 체크박스 추가 -->
@@ -214,13 +218,13 @@
 						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td colspan="13" align="right"> 선택한 상품을
+						<td colspan="15" align="right"> 선택한 상품을
 							<select class="condition" name="condition">
 								<option value="배송중">배송중</option>
 								<option value="반품">반품</option>
 								<option value="반품거절">반품거절</option>
 							</select> &nbsp;
-							<input type="button" value="처리" onclick="stateSubmit();">
+							<input type="button" name="delSubmit" value="처리">
 						</td>
 					</tr>
 					<tr>
@@ -228,15 +232,17 @@
 					</tr>
 				</c:if>
 
-
 				<tr>
 					<td class="ct_list_b" width="100">
 						<!-- 0420 체크박스 추가 -->
 						<c:if test="${!empty sessionScope.user && user.role=='admin' }">
 							<input type="checkbox" name="prodListAll" value="prodAll" onclick="allChk(this);">
 						</c:if> No
-
 					</td>
+					<td class="ct_line02"></td>
+
+					<!-- 리스트에 상품이미지 노출 -->
+					<td class="ct_list_b">상품이미지</td>
 					<td class="ct_line02"></td>
 
 					<!-- 어드민로 접속했을 경우에만 주문번호를 노출시키겠다  -->
@@ -269,7 +275,7 @@
 					<td class="ct_list_b">현재상태</td>
 				</tr>
 				<tr>
-					<td colspan="13" bgcolor="808285" height="1"></td>
+					<td colspan="15" bgcolor="808285" height="1"></td>
 				</tr>
 
 				<!-- product -->
@@ -288,6 +294,17 @@
 						</td>
 						<td></td>
 
+						<!-- 리스트에 상품이미지 노출 -->
+						<td align="center">
+							<a href="#">
+								<!-- 이미지가 없는 경우 -->
+								<c:if test="${empty product.fileName}"><img src="http://placehold.it/50X50"/></c:if>
+								<!-- 이미지가 있는 경우 -->
+								<c:if test="${!empty product.fileName}"><img src="/images/uploadFiles/${product.fileName}" width="50" height="50"/></c:if>
+							</a>
+						</td>
+						<td></td>
+
 						<!-- 어드민으로 접속했을 경우에만 상품번호를 노출시키겠다  -->
 						<c:if test="${!empty user && user.role=='admin'}">
 							<td align="center">${product.prodNo}</td>
@@ -303,8 +320,8 @@
 							<c:if test="${product.proTranCode!='0' && product.proTranCode!='-1'}">
 								<a href="${param.menu=='manage'?'/product/updateProduct':'/product/getProduct'}?prodNo=${product.prodNo}&menu=${param.menu}">${product.prodName}</a>
 							</c:if>
-
 						</td>
+						
 						<td></td>
 						<td align="left">${product.price}</td>
 						<td></td>
@@ -349,7 +366,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan="13" bgcolor="D6D7D6" height="1"></td>
+						<td colspan="15" bgcolor="D6D7D6" height="1"></td>
 					</tr>
 				</c:forEach>
 			</table>

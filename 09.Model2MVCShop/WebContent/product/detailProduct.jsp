@@ -88,11 +88,11 @@
 						<c:when test="${!empty product.fileName && product.fileName!=' '}">
 							<!-- 복수파일 처리 -->
 							<c:if test="${product.fileName.contains(',')}">
-								<img src = "/images/uploadFiles/${product.fileName.split(',')[0]}"><br>
-								<img src = "/images/uploadFiles/${product.fileName.split(',')[1]}">
+								<img src = "/images/uploadFiles/${product.fileName.split(',')[0]}" width="500" height="500"><br>
+								<img src = "/images/uploadFiles/${product.fileName.split(',')[1]}" width="500" height="500">
 							</c:if>
 							<c:if test="${!product.fileName.contains(',')}">
-								<img src = "/images/uploadFiles/${product.fileName}">
+								<img src = "/images/uploadFiles/${product.fileName}" width="500" height="500">
 							</c:if>
 						</c:when>
 						
